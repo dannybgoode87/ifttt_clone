@@ -32,12 +32,17 @@ def check_email():
     else:
         #print "YOU HAVE READ EVERYTHING"
         artist = None
-        song_name = None
+        test = None
 
     return artist, test
 
 
-
+def check_for_media(artist,song_name):
+        dirs = '/home/spadavec/Music/{}/{}.mp3'.format(artist,song_name)
+        if os.path.exists(dirs):
+            return True
+        else:
+            return False
 
 
 
@@ -70,7 +75,10 @@ def main():
         artist, song_name = check_email()
 
         if artist is not None:
-            play_media(artist, song_name)
+            if check_for_media(artist,song_name):
+                play_media(artist, song_name)
+            else:
+                continue
 
         time.sleep(10)
 
