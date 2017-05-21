@@ -5,13 +5,14 @@ import time
 import subprocess
 
 def check_email():
+    """ Checks gmail for unread emails, extracts artist/song name, marks email as read, and returns artist
+    and song name"""
+
+
     client = Gmail()
     USERNAME = 'ifthisthenthatclone'
     PASSWORD = 'ifthisthenthat'
     client.login(USERNAME,PASSWORD)
-
-
-
 
     if client.inbox().mail(unread=True):
 
@@ -38,6 +39,8 @@ def check_email():
 
 
 def check_for_media(artist,song_name):
+        """ Checks for existence of the requested file in the /Music directory. Returns True if found, else False"""
+
         dirs = '/home/spadavec/Music/{}/{}.mp3'.format(artist,song_name)
         if os.path.exists(dirs):
             return True
@@ -69,18 +72,25 @@ def play_media(artist, song_name):
 
 def main():
 
+    print "Starting IFTTT clone script..."
+
     run = True
 
+
+    # Runs indefinitely; if any function wants to kill the loop, switch status of 'run'
     while run:
+        print "Grabbing artist information..."
         artist, song_name = check_email()
 
-        if artist is not None:
+        # If the artist/song are valid strings and exist in /Music, then play music
+        if artist and song_name is not None:
             if check_for_media(artist,song_name):
                 play_media(artist, song_name)
             else:
                 continue
 
-        time.sleep(10)
+        # Short break between songs
+        time.sleep(5)
 
 
 
